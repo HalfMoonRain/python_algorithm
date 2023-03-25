@@ -27,8 +27,11 @@ n	result
 n1 = 15
 n2 = 40
 
-# 이 풀이 방법은 30에서 연속으로 늘려줘야 할 때 처리가 안됨
+"""
+이 풀이 방법은 30에서 연속으로 늘려줘야 할 때 처리가 안됨
+"""
 # def solution(n):
+
 #     i = 1
 #     odd_number = 1
 #     while i < n:
@@ -44,3 +47,23 @@ n2 = 40
 
 # print(solution(n2))
 
+
+""" 
+그래서 3을 연속으로 만날 때도 해보았지만 이 경우는 while 문이 이중으로
+들어갈 뿐 아니라 오답처리. 테스트 케이스만 통과한다.
+"""
+# def solution(n):
+#     odd_number = 1
+#     for i in range(0, n):
+#         odd_number += 1
+#         if odd_number % 3 == 0:
+#             odd_number += 1
+
+#         while '3' in str(odd_number):
+#             odd_number += 1
+#     return odd_number
+
+
+
+
+# print(solution(n2))
