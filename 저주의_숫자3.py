@@ -67,3 +67,16 @@ n2 = 40
 
 
 # print(solution(n2))
+
+"""
+최종
+"""
+def solution(n):
+    count = 1
+    curesed_num = 0
+    while count <= n:
+        curesed_num += 1
+        while curesed_num % 3 == 0 or '3' in str(curesed_num):
+            curesed_num += 1
+        count += 1
+    return curesed_num
