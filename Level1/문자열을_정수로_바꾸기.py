@@ -23,3 +23,9 @@ def solution(s):
 
 
 print(solution(s))
+
+# 자동으로 인식함
+
+
+def solution(s):
+    return int(s)
