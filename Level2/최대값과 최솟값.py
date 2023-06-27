@@ -19,5 +19,5 @@ print(s_list)
 
 
 def solution(s):
-    s_list = list(reversed(s.split(' ')))
-    return s_list[0] + ' ' + s_list[-1]
+    s_list = sorted(list(map(int, s.split(' '))))
+    return str(s_list[0]) + ' ' + str(s_list[-1])
