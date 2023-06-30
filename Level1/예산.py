@@ -38,3 +38,14 @@ for i in item_list:
     if total > budget:
         print(count)
     count += 1
+
+def solution(d, budget):
+    count = 0
+    total = 0
+    item_list = sorted(d)
+    for i in item_list:
+        total += i
+        if total > budget:
+            return count
+        count += 1
+    return len(d)
