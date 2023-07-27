@@ -36,11 +36,6 @@ completion = ["stanko", "ana", "mislav"]
 # print(solution(participant, completion))
 
 # 시간 초과 하나의 리스트에서만 셀 필요가 있어보임
-# for i in participant:
-#     if participant.count(i) > completion.count(i):
-#         print(i)
-
-
 for i in participant:
     if participant.count(i) > completion.count(i):
         print(i)
@@ -48,5 +43,28 @@ for i in participant:
 # 중복에 적용이 안됨
 # print(list(set(participant) - set(completion)))
 
-participant.remove('mislav')
-print(participant)
+def solution(participant, completion):
+    # dict으로 key, value 로 작업
+    runner_dict = {}
+    # 참가자 수 만큼 + 1 (중복이름 까지 처리)
+    for runner in participant:
+        if runner in runner_dict:
+            runner_dict[runner] += 1
+        else:
+            runner_dict[runner] = 1
+    
+    # 완주자가 생긴 만큼 -1
+    for runner in completion:
+        if runner in runner_dict:
+            runner_dict[runner] -= 1
+
+    # 최종적으로 남는 사람은 +1 이 되있을것이다.
+    for runner in runner_dict:
+        if runner_dict[runner] > 0:
+            return runner
+        
+'''
+차이가 생겼던 이유
+리스트로 처리 할 경우 O(n) * O(n) 으로 결과적으로 O(n^2)가 되버려서 상당한 시간이 걸려버렸지만
+다음과같이 dict으로 할 경우 for 문을 3번쓰긴하지만 O(n) 이 되므로 시간차이가 데이터가 커질수록 차이가 더 심해진다. 
+'''
