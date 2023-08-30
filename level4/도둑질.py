@@ -16,25 +16,31 @@ money	return
 [1, 2, 3, 1]	4
 '''
 
-money = [1,2,3,1]
+money = [1, 2, 3, 1]
+'''
+집이 총 4채. 
+첫번째 집 털었을 때 1, 3 --> 4 money (최댓값)
+두번째 집 털었을 때 2, 1 --> 3 money 
+'''
+
 
 def solution(money):
     n = len(money)
-    
+
     # 첫번째 집을 터는 경우
     dp = [0] * n
     dp[0] = money[0]
-    dp[1] = dp[0] # 두번째 집을 털 수 없으므로 그대로 dp[0]
+    dp[1] = dp[0]  # 두번째 집을 털 수 없으므로 그대로 dp[0]
     for i in range(2, n - 1):
         dp[i] = max(dp[i - 1], dp[i - 2] + money[i])
-    sum1 = dp[-2] # 첫번째 집을 털었으면, 마지막에서 두번째 집까지 털 수 있음
-    
+    sum1 = dp[-2]  # 첫번째 집을 털었으면, 마지막에서 두번째 집까지 털 수 있음
+
     # 두번째 집을 터는 경우
     dp = [0] * n
     dp[0] = 0
     dp[1] = money[1]
     for i in range(2, n):
         dp[i] = max(dp[i - 1], dp[i - 2] + money[i])
-    sum2 = dp[-1] # 두번째 집을 털었으면, 마지막 집까지 털 수 있음
-    
+    sum2 = dp[-1]  # 두번째 집을 털었으면, 마지막 집까지 털 수 있음
+
     return max(sum1, sum2)
