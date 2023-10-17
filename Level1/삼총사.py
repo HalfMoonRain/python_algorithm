@@ -55,32 +55,32 @@ numbers = [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
 #
 #
 # 문제에 맞게 풀이 변경
-def solution(numbers):
-    numbers.sort()
-    n = len(numbers)
-    result = 0
-
-    for i in range(n - 2):
-        if i > 0 and numbers[i] == numbers[i - 1]:
-            continue
-
-        left, right = i + 1, n - 1
-        while left < right:
-            s = numbers[i] + numbers[left] + numbers[right]
-            if s == 0:
-                result += 1
-                left += 1
-                right -= 1
-                while left < right and numbers[left] == numbers[left - 1]:
-                    left += 1
-                while left < right and numbers[right] == numbers[right + 1]:
-                    right -= 1
-            elif s < 0:
-                left += 1
-            else:
-                right -= 1
-
-    return result
+# def solution(numbers):
+#     numbers.sort()
+#     n = len(numbers)
+#     result = 0
+#
+#     for i in range(n - 2):
+#         if i > 0 and numbers[i] == numbers[i - 1]:
+#             continue
+#
+#         left, right = i + 1, n - 1
+#         while left < right:
+#             s = numbers[i] + numbers[left] + numbers[right]
+#             if s == 0:
+#                 result += 1
+#                 left += 1
+#                 right -= 1
+#                 while left < right and numbers[left] == numbers[left - 1]:
+#                     left += 1
+#                 while left < right and numbers[right] == numbers[right + 1]:
+#                     right -= 1
+#             elif s < 0:
+#                 left += 1
+#             else:
+#                 right -= 1
+#
+#     return result
 
 
 # 예제 호출
@@ -122,29 +122,87 @@ def solution(numbers):
 #     return results
 #
 
-# def solution(number):
-#     results = 0
-#
-#     for i in range(len(number) - 2):
-#         # 간격을 좁혀가며 합 sum 계산
-#         left, right = i + 1, len(number) - 1
-#         while left < right:
-#             sum = number[i] + number[left] + number[right]
-#             if sum < 0:
-#                 left += 1
-#             elif sum > 0:
-#                 right -= 1
-#             else:
-#                 # sum = 0 인 경우이므로 정답 및 스킵 처리
-#                 results += 1
-#
-#                 while left < right and number[left] == number[left + 1]:
-#                     left += 1
-#                 while left < right and number[right] == number[right - 1]:
-#                     right -= 1
-#
-#                 left += 1
-#                 right -= 1
-#     return results
+def solution(number):
+    results = 0
 
-print(solution(numbers))
+    for i in range(len(number) - 2):
+        # 간격을 좁혀가며 합 sum 계산
+        left, right = i + 1, len(number) - 1
+        while left < right:
+            sum = number[i] + number[left] + number[right]
+            if sum < 0:
+                left += 1
+            elif sum > 0:
+                right -= 1
+            else:
+                # sum = 0 인 경우이므로 정답 및 스킵 처리
+                results += 1
+
+                while left < right and number[left] == number[left + 1]:
+                    left += 1
+                while left < right and number[right] == number[right - 1]:
+                    right -= 1
+
+                left += 1
+                right -= 1
+    return results
+
+numbers.sort()
+for i in range(len(numbers) - 2):
+        for j in range(i + 1, len(numbers) - 1):
+            for k in range(j + 1, len(numbers)):
+                if numbers[i] + numbers[j] + numbers[k] == 0:
+                    print(i, j, k)
+
+print('----------------------------------------------')
+
+# print(solution(numbers))
+numbers.sort()
+
+count = 0
+for i in range(len(numbers)-2):
+    left = 1
+    right = len(numbers)-1
+
+    while left < right:
+        if numbers[i] + numbers[left] + numbers[right] > 0:
+            right -= 1
+
+        elif numbers[i] + numbers[left] + numbers[right] < 0:
+            left += 1
+
+        elif numbers[i] + numbers[left] + numbers[right] == 0:
+            print(i, left, right)
+            count += 1
+            left += 1
+
+
+        if i == left:
+            left += 1
+        elif i == right:
+            right -=1
+        if right == left:
+            break
+
+
+print(count)
+from collections import Counter
+
+
+def solution(number):
+    results = 0
+    num_count = Counter(number)
+
+    for i in range(len(number)):
+        for j in range(i + 1, len(number)):
+            target = -(number[i] + number[j])
+
+            if target in num_count:
+                if (target == number[i] and num_count[target] > 1) or (
+                        target == number[j] and num_count[target] > 1) or (target != number[i] and target != number[j]):
+                    results += 1
+
+    return results // 3
+
+
+s
