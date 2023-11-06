@@ -74,54 +74,113 @@ D	5 달
 다섯 번째 개인정보는 Z약관에 의해 2019년 3월 27일까지 보관 가능하며, 유효기간이 지났으므로 파기해야 할 개인정보입니다.
 '''
 
-today, terms, privacies = "2020.01.01", ["Z 3", "D 5"], ["2019.01.01 D", "2019.11.15 Z", "2019.08.02 D", "2019.07.01 D",
-                                                         "2018.12.28 Z"]
+# today, terms, privacies = "2022.05.19", ["A 6", "B 12", "C 3"], ["2021.05.02 A", "2021.07.01 B", "2022.02.19 C",
+#                                                                  "2022.02.20 C"]
+today, terms, privacies ="2020.01.01",["Z 3", "D 5"],["2019.01.01 D", "2019.11.15 Z", "2019.08.02 D", "2019.07.01 D", "2018.12.28 Z"]
+# today, terms, privacies = "2009.12.31", ["A 13"], ["2008.11.03 A"]
+# def compare_date(today:str, day:str)->bool:
+#     '''
+#     d <= t True
+#     d > t False
+#     오늘날짜가 비교날짜보다 같거나 느리면 True
+#     오늘날짜가 비교날짜보다 뒤면 유통기한 만료이므로 False
+#     '''
+#     t_y, t_m, t_d = today.split('.')
+#     d_y, d_m, d_d = day.split('.')
+#     if t_y < d_y:
+#         return False
+#     elif t_y == d_y and t_m < d_m:
+#         return False
+#     elif t_y == d_y and t_m == d_m and t_d < d_d:
+#         return False
+#     return True
+#
+# terms_dict = {}
+# result = []
+#
+# # terms 를 영어 : 숫자 형태로 담아주기
+# for i in terms:
+#     tmp = i.split(' ')
+#     terms_dict[tmp[0]] = int(tmp[1])
+#
+# for idx, val in enumerate(privacies):
+#     # 입력된 날짜를 연, 월, 일로 분리
+#     cal, term = val.split(' ')
+#     year, month, day = map(int, cal.split('.'))
+#
+#     # 지나가는 달만큼 더해주기
+#     month += terms_dict[term]
+#
+#     if day == 1:
+#         month -= 1
+#         day = 28
+#     if month > 12:
+#         year += 1
+#         month -= 12
+#
+#     c_day = f'{year}.{month}.{day}'
+#
+#     if compare_date(today, c_day): result.append(idx+1)
+#
+# print(result)
 
-terms_dict = {}
-result = []
-
-def compare_date(today:str, day:str)->bool:
+def compare_date(today: str, day: str) -> bool:
     '''
     d <= t True
     d > t False
     오늘날짜가 비교날짜보다 같거나 느리면 True
-    오늘날짜가 비교날짜보다 뒤면 유통기한 만료이므로 False
+    오늘날짜가 비교날짜보다 뒤면 유통기한 만료이므로 폐기
     '''
-    t_y, t_m, t_d = today.split('.')
-    d_y, d_m, d_d = day.split('.')
+    t_y, t_m, t_d = map(int, today.split('.'))
+    d_y, d_m, d_d = map(int, day.split('.'))
     if t_y < d_y:
         return False
-    elif t_m < d_m:
+    elif t_y == d_y and t_m < d_m:
         return False
-    elif t_d < d_d:
+    elif t_y == d_y and t_m == d_m and t_d < d_d:
+        return False
+    elif t_y == d_y and t_m == d_m and t_d == d_d:
         return False
     return True
 
-# terms 를 영어 : 숫자 형태로 담아주기 
-for i in terms:
-    tmp = i.split(' ')
-    terms_dict[tmp[0]] = int(tmp[1])
 
-for idx, val in enumerate(privacies):
-    # 입력된 날짜를 연, 월, 일로 분리
-    cal, term = val.split(' ')
-    year, month, day = map(int, cal.split('.'))
+def solution(today, terms, privacies):
+    terms_dict = {}
+    result = []
+    # terms 를 영어 : 숫자 형태로 담아주기
+    for i in terms:
+        tmp = i.split(' ')
+        terms_dict[tmp[0]] = int(tmp[1])
 
-    # 지나가는 달만큼 더해주기
-    month += terms_dict[term]
+    for idx, val in enumerate(privacies):
+        # 입력된 날짜를 연, 월, 일로 분리
+        cal, term = val.split(' ')
+        year, month, day = map(int, cal.split('.'))
 
-    if day == 1:
-        month -= 1
-        day = 28
-    if month > 12:
-        year += 1
-        month -= 12
+        # day 처리
+        if day == 1:
+            month -= 1
+            day = 28
+        else:
+            day -= 1
 
-    c_day = year + '.' + month + '.' + day
+        # month 처리
+        # 지나가는 달만큼 더해주기
+        plus_month = terms_dict[term]
+        if plus_month > 12:
+            year += plus_month // 12
+            month += plus_month % 12
+        else:
+            month += plus_month
 
-    if compare_date(today, c_day): result.append(idx+1)
+        if month > 12:
+            year += 1
+            month -= 12
+
+        c_day = f'{year}.{month}.{day}'
+
+        if compare_date(today, c_day): result.append(idx + 1)
+    return result
 
 
-
-
-
+print(solution(today, terms, privacies))
