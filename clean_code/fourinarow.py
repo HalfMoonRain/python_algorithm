@@ -82,10 +82,11 @@ def displayBoard(board):
     # 말판 템플릿용으로 foramt() 문자열 메소드에 전달할 리스트를 준비한다
     # 리스트는 말판에서 왼쪽에서 오른쪽으로, 위에서 아래 방향으로 나열된 타일
     # 전체를(빈칸을 포함해) 담고 있다
+
     tileChars = []
     for rowIndex in range(BOARD_HEIGHT):
         for columnIndex in range(BOARD_WIDTH):
-            tileChars.append(board[(rowIndex, columnIndex)])
+            tileChars.append(board[(columnIndex, rowIndex)])
 
     # 말판을 표시한다
     print(BOARD_TEMPLATE.format(*tileChars))
@@ -179,3 +180,4 @@ def isWinner(playerTile, board):
 # 이 프로그램이 임포트하지 않고 실행되면, 게임을 실행한다.
 if __name__ == "__main__":
     main()
+
