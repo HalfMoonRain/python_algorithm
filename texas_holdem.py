@@ -17,7 +17,6 @@
     당신의 패: 스트레이트
     사용된 카드: ('AS', 'KD', '10H', 'JS', 'QS')
 """
-import itertools
 from itertools import combinations, product
 from collections import Counter
 
@@ -115,7 +114,7 @@ def remove_cards_from_deck(deck, cards):
 
 
 # 완전탐색을 사용하여 승률 계산
-def exhaustive_enumeration(hand, board, remaining_deck, num_players=2):
+def exhaustive_enumeration(hand, board, remaining_deck):
     win_count = 0
     tie_count = 0
     loss_count = 0
@@ -124,25 +123,17 @@ def exhaustive_enumeration(hand, board, remaining_deck, num_players=2):
 
     my_best_hand = evaluate_hand(hand + board)
 
-    # 모든 가능한 상대방의 카드 조합을 탐색
-    for opponents_hands in combinations(remaining_deck, 2 * (num_players - 1)):
-        opponent_hands = [opponents_hands[i:i + 2] for i in range(0, len(opponents_hands), 2)]
-        opponents_best_hands = []
+    # 상대방의 가능한 모든 핸드를 탐색
+    for opponent_hand in combinations(remaining_deck, 2):
+        opponent_best_hand = evaluate_hand(list(opponent_hand) + board)
 
-        for opponent_hand in opponent_hands:
-            opponent_best_hand = evaluate_hand(list(opponent_hand) + board)
-            opponents_best_hands.append((opponent_best_hand, opponent_hand))
+        if strongest_opponent_hand is None or opponent_best_hand > strongest_opponent_hand:
+            strongest_opponent_hand = opponent_best_hand
+            strongest_opponent_cards = opponent_hand
 
-        # 가장 강한 상대방 핸드와 비교
-        best_opponent_hand, best_opponent_cards = max(opponents_best_hands, key=lambda x: x[0])
-
-        if strongest_opponent_hand is None or best_opponent_hand > strongest_opponent_hand:
-            strongest_opponent_hand = best_opponent_hand
-            strongest_opponent_cards = best_opponent_cards
-
-        if my_best_hand > best_opponent_hand:
+        if my_best_hand > opponent_best_hand:
             win_count += 1
-        elif my_best_hand == best_opponent_hand:
+        elif my_best_hand == opponent_best_hand:
             tie_count += 1
         else:
             loss_count += 1
@@ -155,7 +146,7 @@ def exhaustive_enumeration(hand, board, remaining_deck, num_players=2):
     return win_rate, tie_rate, loss_rate, strongest_opponent_hand, strongest_opponent_cards
 
 
-# 플레이어 수 설정
+# 플레이어 수 설정 (카드를 덱에서 제거하는 용도로만 사용)
 num_players = 5  # 예: 5명의 플레이어
 
 # 카드 입력 받기 및 승률 계산
@@ -168,10 +159,12 @@ board = []
 board += input_cards("오픈 보드의 3장의 카드를 입력하세요 (예: 10H JS QS): ", expected_num=3)
 deck = remove_cards_from_deck(deck, board)  # 보드 카드를 덱에서 제거
 
+# 상대방에게 할당된 카드 수만큼 제거 (플레이어 수를 고려)
+deck = deck[:-2 * (num_players - 1)]
+
 best_five_cards, best_hand_rank = best_hand(hand + board)
 win_rate, tie_rate, loss_rate, strongest_opponent_hand, strongest_opponent_cards = exhaustive_enumeration(hand, board,
-                                                                                                          deck,
-                                                                                                          num_players=num_players)
+                                                                                                          deck)
 print(f"플랍 이후 승률: {win_rate * 100:.2f}%")
 print(f"당신의 패: {hand_description(best_hand_rank)}")
 print(f"사용된 카드: {best_five_cards}")
@@ -184,8 +177,7 @@ deck = remove_cards_from_deck(deck, board[-1:])  # 새로운 카드를 덱에서
 
 best_five_cards, best_hand_rank = best_hand(hand + board)
 win_rate, tie_rate, loss_rate, strongest_opponent_hand, strongest_opponent_cards = exhaustive_enumeration(hand, board,
-                                                                                                          deck,
-                                                                                                          num_players=num_players)
+                                                                                                          deck)
 print(f"턴 이후 승률: {win_rate * 100:.2f}%")
 print(f"당신의 패: {hand_description(best_hand_rank)}")
 print(f"사용된 카드: {best_five_cards}")
@@ -197,9 +189,7 @@ board += input_cards("리버 카드를 입력하세요 (예: 3S): ", expected_nu
 deck = remove_cards_from_deck(deck, board[-1:])  # 새로운 카드를 덱에서 제거
 
 best_five_cards, best_hand_rank = best_hand(hand + board)
-win_rate, tie_rate, loss_rate, strongest_opponent_hand, strongest_opponent_cards = exhaustive_enumeration(hand, board,
-                                                                                                          deck,
-                                                                                                          num_players=num_players)
+win_rate, tie_rate, loss_rate, strongest_opponent_hand, strongest_opponent_cards = exhaustive_enumeration(hand, board, deck)
 print(f"리버 이후 승률: {win_rate * 100:.2f}%")
 print(f"당신의 패: {hand_description(best_hand_rank)}")
 print(f"사용된 카드: {best_five_cards}")
