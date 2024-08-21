@@ -1,7 +1,29 @@
 import random
 from itertools import combinations, product
 from collections import Counter
+"""
+포커 승률 계산기. 몬테 시뮬레이션을 이용한 버전. 
 
+# 사용법
+    1. num_players 설정
+    2. 코드실행 후 주어진 행동 실행
+
+# 문양
+    S: Spade
+    D: Diamond
+    H: Heart
+    C: Clover
+
+# 숫자
+    1~10 , J, Q, K, A
+
+# 출력 예시
+    당신의 카드를 입력하세요 (예: AS KD): AS KD
+    오픈 보드의 3장의 카드를 입력하세요 (예: 10H JS QS): 10H JS QS
+    플랍 이후 승률: 56.70%
+    당신의 패: 스트레이트
+    사용된 카드: ('AS', 'KD', '10H', 'JS', 'QS')
+"""
 
 # 포커 핸드 랭킹을 위한 함수
 def evaluate_hand(cards):
